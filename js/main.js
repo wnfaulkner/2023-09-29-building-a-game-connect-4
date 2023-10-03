@@ -87,24 +87,36 @@ function renderControls(){
 //Update board in response to user action
 function handleDrop(event){
 	const colIdx = colMarkerEls.indexOf(event.target)
+	// console.log(colIdx)
+
 	if(colIdx === -1){return} //Guards
 	const colArr = board[colIdx] //shortcut to the column
-	rowIdx = colArr.indexOf(0)
+	const rowIdx = colArr.indexOf(0)
+	// console.log(rowIdx)
+	
 	colArr[rowIdx] = turn
 
 	turn *= -1 
-	winner = getWinner()
+	winner = getWinner(colIdx, rowIdx)
 	render()
 }
 
-function getWinner(){
-	checkVerticalWin()
-	checkHorizontalWin()
-	checkDiagonalWin()
+function getWinner(colIdx, rowIdx){
+	return checkVerticalWin(colIdx, rowIdx)
+	//checkHorizontalWin(colIdx, rowIdx)
+	//checkDiagonalWin(colIdx, rowIdx)
 }
 
-function checkVerticalWin(rowIdx, col){
+function checkVerticalWin(rowIdx, colIdx){
+	return countAdjacent(colIdx, rowIdx, 0, -1) === 3 ? board[colIdx][rowIdx] : null
+}
 
+function countAdjacent(colIdx, rowIdx, colOffset, rowOffset){
+	const player = board[colIdx][rowIdx]
+	let count = 0;
+
+
+	console.log(player)
 }
 
 init()
