@@ -15,9 +15,11 @@ let winner; // winner: null = no winner, 1/-1 = winner, 'T' = tie
 /*----- cached elements  -----*/
 const messageEl = document.querySelector('h2')
 const playAgainBtn = document.querySelector('button')
-const colMarkerEls = document.querySelector('#column-markers > div');
+const colMarkerEls = [...document.querySelectorAll('#column-markers > div')]
 
 /*----- event listeners -----*/
+document.getElementById('column-markers').addEventListener('click', handleDrop)
+playAgainBtn.addEventListener('click', init)
 
 
 /*----- functions -----*/
@@ -77,9 +79,31 @@ function renderControls(){
 	colMarkerEls.forEach(
 		function(colMarkerEl, colIdx){
 			const hideMarker = !board[colIdx].includes(0) || winner
-			colMarkerEl.style.visibility = hideMarker ? 'visible':'hidden'
+			colMarkerEl.style.visibility = hideMarker ? 'hidden':'visible'
 		}
 	)
+}
+
+//Update board in response to user action
+function handleDrop(event){
+	const colIdx = colMarkerEls.indexOf(event.target)
+	if(colIdx === -1){return} //Guards
+	const colArr = board[colIdx] //shortcut to the column
+	rowIdx = colArr.indexOf(0)
+	colArr[rowIdx] = turn
+
+	turn *= -1 
+	winner = getWinner()
+	render()
+}
+
+function getWinner(){
+	checkVerticalWin()
+	checkHorizontalWin()
+	checkDiagonalWin()
+}
+
+function checkVerticalWin(rowIdx, col){
 
 }
 
