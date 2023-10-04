@@ -102,21 +102,52 @@ function handleDrop(event){
 }
 
 function getWinner(colIdx, rowIdx){
-	return checkVerticalWin(colIdx, rowIdx)
-	//checkHorizontalWin(colIdx, rowIdx)
-	//checkDiagonalWin(colIdx, rowIdx)
+	return checkVerticalWin(colIdx, rowIdx) ||
+	checkHorizontalWin(colIdx, rowIdx) ||
+	checkDiagonalNWSEWin(colIdx, rowIdx) ||
+	checkDiagonalNESWWin(colIdx, rowIdx)
 }
 
-function checkVerticalWin(rowIdx, colIdx){
+function checkVerticalWin(colIdx, rowIdx){
 	return countAdjacent(colIdx, rowIdx, 0, -1) === 3 ? board[colIdx][rowIdx] : null
+}
+
+function checkHorizontalWin(colIdx, rowIdx){
+	const adjacentCountLeft = countAdjacent(colIdx, rowIdx, -1, 0)
+	const adjacentCountRight = countAdjacent(colIdx, rowIdx, 1, 0)
+	return (adjacentCountLeft + adjacentCountRight) === 3 ? board[colIdx][rowIdx] : null
+}
+
+function checkDiagonalNWSEWin(colIdx, rowIdx){
+	const adjacentCountNW = countAdjacent(colIdx, rowIdx, -1, 1)
+	const adjacentCountSE = countAdjacent(colIdx, rowIdx, 1, -1)
+	return (adjacentCountNW + adjacentCountSE) === 3 ? board[colIdx][rowIdx] : null
+}
+
+function checkDiagonalNESWWin(colIdx, rowIdx){
+	const adjacentCountNE = countAdjacent(colIdx, rowIdx, 1, 1)
+	const adjacentCountSW = countAdjacent(colIdx, rowIdx, -1, -1)
+	return (adjacentCountNE + adjacentCountSW) === 3 ? board[colIdx][rowIdx] : null
 }
 
 function countAdjacent(colIdx, rowIdx, colOffset, rowOffset){
 	const player = board[colIdx][rowIdx]
 	let count = 0;
+	colIdx += colOffset;
+	rowIdx += rowOffset;
 
+	while(
+		board[colIdx] !== undefined && //colIdx >= 0 && colIdx <= 6 //Ensure that we stay on the board (within bounds)
+		board[colIdx][rowIdx] !== undefined &&
+		board[colIdx][rowIdx] === player
+	){
+		count++
+		colIdx += colOffset
+		rowIdx += rowOffset
+	}
 
-	console.log(player)
+	return(count)
+	// console.log(player)
 }
 
 init()
